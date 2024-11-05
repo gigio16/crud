@@ -1,25 +1,29 @@
 <?php
 require 'banco.php';
-
 $id = 0;
 
-// Verifica se 'codigo' está definido na URL
-if (!empty($_GET['codigo'])) {
-    $id = $_GET['codigo']; // Use $_GET em vez de $_REQUEST
+if(!empty($_GET['rm']))
+{
+    $id = $_REQUEST['rm'];
 }
+echo($id);
 
-if (!empty($_POST)) {
-    $id = $_POST['codigo'];
+if(!empty($_POST))
+{
+    $id = $_POST['rm'];
 
-    // Deletar do banco:
+    //Delete do banco:
+
     $pdo = Banco::conectar();
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $sql = "DELETE FROM tb_alunos WHERE codigo = ?";
+
+    $sql = "delete from tb_alunos where rm = ?";
     $q = $pdo->prepare($sql);
+
     $q->execute(array($id));
     Banco::desconectar();
-    header("Location: index.php"); // Corrigido 'locatio' para 'Location'
-    exit(); // É uma boa prática chamar exit após header
+
+    header("Location: index.php");
 }
 ?>
 
@@ -36,14 +40,15 @@ if (!empty($_POST)) {
             <div class="row">
                 <h3 class="well">Excluir Contato</h3>
             </div>
-            <form class="form-horizontal" action="delete.php" method="POST">
-                <input type="hidden" name="codigo" value="<?php echo htmlspecialchars($id); ?>" /> <!-- htmlspecialchars para segurança -->
-                <div class="alert alert-danger"> Deseja excluir o contato? </div>
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-danger">Sim</button>
-                    <a href="index.php" class="btn btn-default">Não</a> <!-- Removido 'type' incorreto -->
-                </div>
-            </form>
+                <form class="form-horizontal" action="delete.php" method="POST">
+                    <input type="hidden" name="rm" value="<?php echo $id;?>" />
+                    <div class="alert alert-danger"> Deseja excluir o contato? </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-danger">Sim</button>
+                        <a href="index.php" type="btn" class="btn btn-default">Não</a>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </body>
